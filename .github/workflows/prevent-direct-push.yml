@@ -1,0 +1,38 @@
+name: Prevenir Push Directo
+
+on:
+  push:
+    branches:
+      - main
+      - Development
+
+jobs:
+  block-direct-push:
+    runs-on: ubuntu-latest
+    name: Bloquear Push Directo
+    steps:
+      - name: Bloquear push directo a ramas protegidas
+        run: |
+          BRANCH_NAME="${{ github.ref_name }}"
+
+          echo "========================================"
+          echo "Protección de Ramas"
+          echo "========================================"
+          echo "❌ Push directo bloqueado"
+          echo ""
+          echo "Rama: $BRANCH_NAME"
+          echo ""
+          echo "No se permiten push directos a las ramas 'main' y 'Development'."
+          echo ""
+          echo "Flujo de trabajo correcto:"
+          echo "  1. Crea una rama feature: git checkout -b feature/mi-tarea"
+          echo "  2. Realiza tus cambios y haz commit"
+          echo "  3. Haz push de tu rama feature: git push origin feature/mi-tarea"
+          echo "  4. Abre un Pull Request hacia Development"
+          echo "  5. Una vez aprobado, fusiona mediante el PR"
+          echo ""
+          echo "Para fusionar a main:"
+          echo "  1. Abre un Pull Request de Development hacia main"
+          echo "  2. Una vez aprobado, fusiona mediante el PR"
+          echo ""
+          exit 1
