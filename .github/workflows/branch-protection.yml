@@ -1,0 +1,66 @@
+name: Validación de Reglas de Ramas
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+jobs:
+  validate-branch-rules:
+    runs-on: ubuntu-latest
+    name: Validar Reglas de Ramas
+    steps:
+      - name: Validar reglas de PR entre ramas
+        run: |
+          SOURCE_BRANCH="${{ github.head_ref }}"
+          TARGET_BRANCH="${{ github.base_ref }}"
+
+          echo "========================================"
+          echo "Validación de Estrategia de Ramas"
+          echo "========================================"
+          echo "Rama origen: $SOURCE_BRANCH"
+          echo "Rama destino: $TARGET_BRANCH"
+          echo ""
+
+          # Validar PR a Development
+          if [ "$TARGET_BRANCH" == "Development" ]; then
+            if [[ ! "$SOURCE_BRANCH" =~ ^feature/ ]]; then
+              echo "❌ Error: Los pull requests hacia 'Development' deben venir de ramas 'feature/*'"
+              echo ""
+              echo "Rama origen actual: $SOURCE_BRANCH"
+              echo "Rama esperada: feature/*"
+              echo ""
+              echo "Por favor, crea una rama feature (ej: feature/mi-tarea) y abre el PR desde ahí."
+              exit 1
+            fi
+            echo "✅ Válido: feature/* -> Development"
+            echo "Este PR sigue la estrategia de ramas correcta."
+            exit 0
+          fi
+
+          # Validar PR a main
+          if [ "$TARGET_BRANCH" == "main" ]; then
+            if [ "$SOURCE_BRANCH" != "Development" ]; then
+              echo "❌ Error: Los pull requests hacia 'main' deben venir únicamente de la rama 'Development'"
+              echo ""
+              echo "Rama origen actual: $SOURCE_BRANCH"
+              echo "Rama esperada: Development"
+              echo ""
+              if [[ "$SOURCE_BRANCH" =~ ^feature/ ]]; then
+                echo "⚠️  Las ramas feature no pueden fusionarse directamente a main."
+                echo "Por favor, fusiona primero a Development, luego crea un PR de Development a main."
+              fi
+              exit 1
+            fi
+            echo "✅ Válido: Development -> main"
+            echo "Este PR sigue la estrategia de ramas correcta."
+            exit 0
+          fi
+
+          # Si el target no es ni Development ni main
+          echo "⚠️  Advertencia: El destino del pull request no es 'Development' ni 'main'"
+          echo "Rama destino: $TARGET_BRANCH"
+          echo ""
+          echo "Flujo de trabajo esperado:"
+          echo "  feature/* -> Development -> main"
+          echo ""
+          echo "Esta validación solo aplica reglas para las ramas Development y main."
