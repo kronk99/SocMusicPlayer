@@ -8,10 +8,20 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+/**
+ * =========================================
+ * HARDWARE MEMORY MAP
+ * =========================================
+ * TODO: This directions should be updated according to the design in Platform Designer.
+ * The following values are just placeholders.
+ */
 
-// TODO: Hardware memory map
+/* HPS-FPGA Bridge Base Addresses */
+#define HPS_TO_FPGA_BASE    0xC0000000 /* Main bridge */
 
-
+/* FPGA Peripherals Offsets (adjust acoording to PLatform Designer) */
+#define FIFO_BASE_OFFSET    0x00001000 /* Audio FIFO offset */
+#define FIFO_SIZE           8192       /* 8KB FIFO */
 
 
 

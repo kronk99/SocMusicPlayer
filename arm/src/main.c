@@ -48,8 +48,11 @@ static int initialize_system(app_context_t *app) {
     
     /* 1. Initialize FIFO (HPS-FPGA communication) */
     INFO_PRINT("Initializing FIFO...");
-    // TODO
-    // if init not successful return -1
+    uint32_t fifo_addr = HPS_TO_FPGA_BASE + FIFO_BASE_OFFSET;
+    if (fifo_init(&app->fifo, fifo_addr, FIFO_SIZE) != 0) {
+        ERROR_PRINT("Failed to initialize FIFO");
+        return -1;
+    }
 
     /* TODO: Rest of them -> 2., 3., 4., etc*/
 
