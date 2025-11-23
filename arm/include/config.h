@@ -16,11 +16,14 @@
 
 
 /* Some macros */
-#define ERROR_PRINT(fmt, ...) \
-    fprintf(stderr, "[ERROR] %s:%d: " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__)
-
 #define INFO_PRINT(fmt, ...) \
     printf("[INFO] " fmt "\n", ##__VA_ARGS__)
+
+#define DEBUG_PRINT(fmt, ...) \
+    printf("[DEBUG] " fmt "\n", ##__VA_ARGS__)
+
+#define ERROR_PRINT(fmt, ...) \
+    fprintf(stderr, "[ERROR] %s:%d: " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__)
 
 
 

@@ -34,7 +34,7 @@ DEPENDS = $(OBJECTS:.o=.d)
 INCLUDES = -I$(INC_DIR)
 
 # Warning flags
-WARNINGS = -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Wwrite-strings -Wconversion -Wmissing-prototypes
+WARNINGS = -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Wwrite-strings -Wmissing-prototypes
 
 # Optimization flags
 OPTFLAGS = -O0 -g
