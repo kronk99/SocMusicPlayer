@@ -59,7 +59,7 @@ CFLAGS += -MMD -MP
 LIBS = -lpthread -lm
 
 # Linker flags
-LDFLAGS = $(ARCHFLAGS)
+LDFLAGS = $(ARCHFLAGS) -static
 
 
 # ===========================
