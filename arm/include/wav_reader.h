@@ -9,6 +9,9 @@
 #ifndef WAV_READER_H
 #define WAV_READER_H
 
+#include <stdint.h>
+#include <stdio.h>
+
 /* ===============================
  * WAV FILE STRUCTURE
  * =============================== */

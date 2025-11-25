@@ -20,6 +20,8 @@
 #include "config.h"
 #include "fifo_writer.h"
 // TODO: Rest of the includes
+// TODO: Get rid of the following include, its just for testing purposes
+#include "wav_reader.h"
 
 
 /* =======================
@@ -48,13 +50,21 @@ static int initialize_system(app_context_t *app) {
     
     /* 1. Initialize FIFO (HPS-FPGA communication) */
     INFO_PRINT("Initializing FIFO...");
-    uint32_t fifo_addr = HPS_TO_FPGA_BASE + FIFO_BASE_OFFSET;
-    if (fifo_init(&app->fifo, fifo_addr, FIFO_SIZE) != 0) {
-        ERROR_PRINT("Failed to initialize FIFO");
-        return -1;
-    }
+    //uint32_t fifo_addr = HPS_TO_FPGA_BASE + FIFO_BASE_OFFSET;
+
+    //if (fifo_init(&app->fifo, fifo_addr, FIFO_SIZE) != 0) {
+    //    ERROR_PRINT("Failed to initialize FIFO");
+    //    return -1;
+    //}
 
     /* TODO: Rest of them -> 2., 3., 4., etc*/
+    // TODO: Get rid of the following, its just for testing purposes
+    INFO_PRINT("Initializing wav reader...");
+
+    wav_file_t temp_wav;
+    wav_open(&temp_wav, "bass-wiggle-297877.wav");
+    wav_close(&temp_wav);
+    // Until here, it is just for testing purposes
 
 
     INFO_PRINT("================================");
