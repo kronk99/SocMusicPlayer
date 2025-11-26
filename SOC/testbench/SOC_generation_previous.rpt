@@ -1,0 +1,162 @@
+Info: Starting: Create testbench Platform Designer system
+Info: C:/Users/hp/Documents/Quartus/SOC/testbench/SOC.ipx
+Info: qsys-generate C:\Users\hp\Documents\Quartus\SOC\SOC.qsys --testbench=STANDARD --output-directory=C:\Users\hp\Documents\Quartus\SOC --family="Cyclone V" --part=5CGXFC7C7F23C8
+Progress: Loading SOC/SOC.qsys
+Progress: Reading input file
+Progress: Adding CLK [clock_source 18.0]
+Progress: Parameterizing module CLK
+Progress: Adding FIFO [altera_avalon_fifo 18.0]
+Progress: Parameterizing module FIFO
+Progress: Adding NIOS [altera_nios2_gen2 18.0]
+Progress: Parameterizing module NIOS
+Progress: Adding RAM [altera_avalon_onchip_memory2 18.0]
+Progress: Parameterizing module RAM
+Progress: Adding REGLEDS [altera_avalon_pio 18.0]
+Progress: Parameterizing module REGLEDS
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: qsys-generate succeeded.
+Info: Loading IP catalog for testbench.
+Progress: 
+Progress: 
+Progress: 
+Progress: (2) searching C:/intelfpga_lite/18.0/quartus/sopc_builder/bin/root_components.ipx (ipx file)
+Info: Reading index C:\intelfpga_lite\18.0\quartus\sopc_builder\bin\root_components.ipx
+Info: C:\intelfpga_lite\18.0\quartus\sopc_builder\bin\root_components.ipx: Loading now from components.ipx
+Info: Reading index C:\intelfpga_lite\18.0\quartus\sopc_builder\bin\ip_component_categories.ipx
+Info: C:\intelfpga_lite\18.0\quartus\sopc_builder\bin\ip_component_categories.ipx described 0 plugins, 0 paths, in 0.01 seconds
+Info: C:/intelfpga_lite/18.0/quartus/sopc_builder/bin/ip_component_categories.ipx matched 1 files in 0.01 seconds
+Info: C:/Users/hp/Documents/Quartus/SOC/testbench/ip/**/* matched 0 files in 0.00 seconds
+Info: Reading index C:\Users\hp\Documents\Quartus\SOC\testbench\SOC.ipx
+Progress: Loading SOC/SOC.qsys
+Info: C:/Users/hp/Documents/Quartus/SOC/* matched 12 files in 0.00 seconds
+Info: C:/Users/hp/Documents/Quartus/SOC/ip/**/* matched 0 files in 0.00 seconds
+Info: Reading index C:\Users\hp\Documents\Quartus\SOC\testbench\SOC.ipx
+Warning: C:/Users/hp/Documents/Quartus/SOC/*/* repeats C:/Users/hp/Documents/Quartus/SOC/*
+Warning: C:/Users/hp/Documents/Quartus/SOC/*/* repeats C:/Users/hp/Documents/Quartus/SOC/ip/**/*
+Warning: C:/Users/hp/Documents/Quartus/SOC/*/* repeats C:/Users/hp/Documents/Quartus/SOC/*/*
+Info: C:\Users\hp\Documents\Quartus\SOC\testbench\SOC.ipx described 0 plugins, 3 paths, in 0.00 seconds
+Info: C:/Users/hp/Documents/Quartus/SOC/*/* matched 10 files in 0.01 seconds
+Info: C:\Users\hp\Documents\Quartus\SOC\testbench\SOC.ipx described 0 plugins, 3 paths, in 0.01 seconds
+Info: C:/Users/hp/Documents/Quartus/SOC/testbench/* matched 4 files in 0.01 seconds
+Info: C:/Users/hp/Documents/Quartus/SOC/testbench/*/* matched 0 files in 0.00 seconds
+Info: C:/Users/hp/.altera.quartus/ip/18.0/**/* matched 0 files in 0.00 seconds
+Info: C:/intelfpga_lite/18.0/quartus/sopc_builder/bin/$$QUARTUS_IP_PROJECTDIR/* matched 0 files in 0.00 seconds
+Info: C:/intelfpga_lite/18.0/quartus/sopc_builder/bin/$$QUARTUS_IP_USERDIR/* matched 0 files in 0.00 seconds
+Info: C:/intelfpga_lite/18.0/quartus/sopc_builder/bin/$$QUARTUS_IP_GLOBALDIR/* matched 0 files in 0.00 seconds
+Info: Reading index C:\intelfpga_lite\18.0\ip\altera\altera_components.ipx
+Info: C:\intelfpga_lite\18.0\ip\altera\altera_components.ipx described 2031 plugins, 0 paths, in 0.26 seconds
+Info: C:/intelfpga_lite/18.0/ip/**/* matched 138 files in 0.27 seconds
+Info: C:/intelfpga_lite/ip/**/* matched 0 files in 0.00 seconds
+Info: Reading index C:\intelfpga_lite\18.0\quartus\sopc_builder\builtin.ipx
+Info: C:\intelfpga_lite\18.0\quartus\sopc_builder\builtin.ipx described 83 plugins, 0 paths, in 0.01 seconds
+Info: C:/intelfpga_lite/18.0/quartus/sopc_builder/**/* matched 8 files in 0.01 seconds
+Info: Reading index C:\intelfpga_lite\18.0\quartus\common\librarian\factories\index.ipx
+Info: C:\intelfpga_lite\18.0\quartus\common\librarian\factories\index.ipx described 151 plugins, 0 paths, in 0.01 seconds
+Info: C:/intelfpga_lite/18.0/quartus/common/librarian/factories/**/* matched 4 files in 0.01 seconds
+Info: C:/intelfpga_lite/18.0/quartus/sopc_builder/bin/$IP_IPX_PATH matched 1 files in 0.00 seconds
+Info: C:\intelfpga_lite\18.0\quartus\sopc_builder\bin\root_components.ipx described 0 plugins, 13 paths, in 0.32 seconds
+Info: C:/intelfpga_lite/18.0/quartus/sopc_builder/bin/root_components.ipx matched 1 files in 0.32 seconds
+Progress: 
+Progress: 
+Progress: 
+Info: Running script C:/intelfpga_lite/18.0/quartus/sopc_builder/bin/tbgen.tcl
+Info: send_message Info TB_Gen: QSYS Testbench Generator Rev: $Revision: #1 $
+Info: TB_Gen: QSYS Testbench Generator Rev: $Revision: #1 $
+Info: get_module_property NAME
+Info: send_message Info TB_Gen: System design is: SOC
+Info: TB_Gen: System design is: SOC
+Info: get_interfaces 
+Info: get_connections 
+Info: get_interface_property clk EXPORT_OF
+Info: get_instance_property CLK CLASS_NAME
+Info: get_instance_assignment CLK testbench.partner.map.clk_in
+Info: get_interface_property leds EXPORT_OF
+Info: get_instance_property REGLEDS CLASS_NAME
+Info: get_instance_assignment REGLEDS testbench.partner.map.external_connection
+Info: get_interface_property reset EXPORT_OF
+Info: get_instance_property CLK CLASS_NAME
+Info: get_instance_assignment CLK testbench.partner.map.clk_in_reset
+Info: send_message Info TB_Gen: Creating testbench system : SOC_tb with all standard BFMs
+Info: TB_Gen: Creating testbench system : SOC_tb with all standard BFMs
+Info: create_system SOC_tb
+Info: add_instance SOC_inst SOC 
+Info: set_use_testbench_naming_pattern true SOC
+Info: get_instance_interfaces SOC_inst
+Info: get_instance_interface_property SOC_inst clk CLASS_NAME
+Info: get_instance_interface_property SOC_inst leds CLASS_NAME
+Info: get_instance_interface_property SOC_inst reset CLASS_NAME
+Info: get_instance_interface_property SOC_inst clk CLASS_NAME
+Info: send_message Info TB_Gen: clock_sink found: clk
+Info: TB_Gen: clock_sink found: clk
+Info: get_instance_interface_property SOC_inst clk CLASS_NAME
+Info: add_instance SOC_inst_clk_bfm altera_avalon_clock_source 
+Info: get_instance_property SOC_inst_clk_bfm CLASS_NAME
+Info: get_instance_interface_parameter_value SOC_inst clk clockRate
+Info: set_instance_parameter_value SOC_inst_clk_bfm CLOCK_RATE 50000000.0
+Info: set_instance_parameter_value SOC_inst_clk_bfm CLOCK_UNIT 1
+Info: get_instance_property SOC_inst_clk_bfm CLASS_NAME
+Info: get_instance_interface_property SOC_inst clk CLASS_NAME
+Info: get_instance_interfaces SOC_inst_clk_bfm
+Info: get_instance_interface_property SOC_inst_clk_bfm clk CLASS_NAME
+Info: add_connection SOC_inst_clk_bfm.clk SOC_inst.clk
+Info: get_instance_interface_property SOC_inst reset CLASS_NAME
+Info: send_message Info TB_Gen: reset_sink found: reset
+Info: TB_Gen: reset_sink found: reset
+Info: get_instance_interface_property SOC_inst reset CLASS_NAME
+Info: add_instance SOC_inst_reset_bfm altera_avalon_reset_source 
+Info: get_instance_property SOC_inst_reset_bfm CLASS_NAME
+Info: get_instance_interface_ports SOC_inst reset
+Info: get_instance_interface_port_property SOC_inst reset reset_reset_n ROLE
+Info: get_instance_interface_port_property SOC_inst reset reset_reset_n ROLE
+Info: set_instance_parameter_value SOC_inst_reset_bfm ASSERT_HIGH_RESET 0
+Info: set_instance_parameter_value SOC_inst_reset_bfm INITIAL_RESET_CYCLES 50
+Info: get_instance_property SOC_inst_reset_bfm CLASS_NAME
+Info: get_instance_interfaces SOC_inst_reset_bfm
+Info: get_instance_interface_property SOC_inst_reset_bfm clk CLASS_NAME
+Info: get_instance_interface_property SOC_inst_reset_bfm reset CLASS_NAME
+Info: get_instance_property SOC_inst_reset_bfm CLASS_NAME
+Info: get_instance_interface_parameter_value SOC_inst reset associatedClock
+Info: get_instance_interfaces SOC_inst_clk_bfm
+Info: get_instance_interface_property SOC_inst_clk_bfm clk CLASS_NAME
+Info: send_message Warning TB_Gen: SOC_inst_reset_bfm is not associated to any clock; connecting SOC_inst_reset_bfm to 'SOC_inst_clk_bfm.clk'
+Warning: TB_Gen: SOC_inst_reset_bfm is not associated to any clock; connecting SOC_inst_reset_bfm to 'SOC_inst_clk_bfm.clk'
+Info: add_connection SOC_inst_clk_bfm.clk SOC_inst_reset_bfm.clk
+Info: get_instance_interface_property SOC_inst reset CLASS_NAME
+Info: get_instance_interfaces SOC_inst_reset_bfm
+Info: get_instance_interface_property SOC_inst_reset_bfm clk CLASS_NAME
+Info: get_instance_interface_property SOC_inst_reset_bfm reset CLASS_NAME
+Info: add_connection SOC_inst_reset_bfm.reset SOC_inst.reset
+Info: get_instance_interface_property SOC_inst leds CLASS_NAME
+Info: send_message Info TB_Gen: conduit_end found: leds
+Info: TB_Gen: conduit_end found: leds
+Info: get_instance_interface_property SOC_inst leds CLASS_NAME
+Info: add_instance SOC_inst_leds_bfm altera_conduit_bfm 
+Info: get_instance_property SOC_inst_leds_bfm CLASS_NAME
+Info: get_instance_interface_parameter_value SOC_inst leds associatedClock
+Info: get_instance_interface_parameter_value SOC_inst leds associatedReset
+Info: get_instance_interface_ports SOC_inst leds
+Info: get_instance_interface_port_property SOC_inst leds leds_export ROLE
+Info: get_instance_interface_port_property SOC_inst leds leds_export WIDTH
+Info: get_instance_interface_port_property SOC_inst leds leds_export DIRECTION
+Info: set_instance_parameter_value SOC_inst_leds_bfm CLOCKED_SIGNAL 0
+Info: set_instance_parameter_value SOC_inst_leds_bfm ENABLE_RESET 0
+Info: set_instance_parameter_value SOC_inst_leds_bfm SIGNAL_ROLES export
+Info: set_instance_parameter_value SOC_inst_leds_bfm SIGNAL_WIDTHS 32
+Info: set_instance_parameter_value SOC_inst_leds_bfm SIGNAL_DIRECTIONS input
+Info: get_instance_property SOC_inst_leds_bfm CLASS_NAME
+Info: get_instance_interface_property SOC_inst leds CLASS_NAME
+Info: get_instance_interfaces SOC_inst_leds_bfm
+Info: get_instance_interface_property SOC_inst_leds_bfm conduit CLASS_NAME
+Info: add_connection SOC_inst_leds_bfm.conduit SOC_inst.leds
+Info: send_message Info TB_Gen: Saving testbench system: SOC_tb.qsys
+Info: TB_Gen: Saving testbench system: SOC_tb.qsys
+Info: save_system SOC_tb.qsys
+Info: send_message Info TB_Gen: TBGEN SUCCESSFUL
+Info: TB_Gen: TBGEN SUCCESSFUL
+Info: Testbench system: C:/Users/hp/Documents/Quartus/SOC/testbench/SOC_tb.qsys
+Info: Done
+Error: There were errors creating the testbench system.
+Info: Stopping: Create testbench Platform Designer system
