@@ -1,0 +1,19 @@
+***************************
+Para el servidor: 
+***************************
+abrir una terminal en la carpeta del servidor y ejecutar: 
+gcc -Wall -O2 audio_server.c -o audio_server
+./audio_server
+
+* en otra terminal se puede revisar con :curl http://localhost:8080/api/track
+ *
+
+
+***************************
+Para la pagina: 
+***************************
+abrir una terminal en la carpeta de la pagina y ejecutar: 
+npm run dev
+y abrir el http://localhost:3000
+
+CAMBIO DE PRUEBA

@@ -38,8 +38,23 @@
 
 # software binary files
 
+/*
+!/*.gitignore
+##
+!*.qpf
+!*.qsf
+!*.qws
+!*.bdf
+!*.vhd
+!*.v
+!*.ptf
+!*.bsf
+!**/class.ptf
+!*.tbd
+!*.sof
 ## tbd
 
+!*.tcl
 
 ### C ###
 # Prerequisites
@@ -285,6 +300,20 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+### Web ###
+*.asp
+*.cer
+*.csr
+*.css
+*.htm
+*.html
+*.js
+*.jsp
+*.php
+*.rss
+*.wasm
+*.wat
+*.xhtml
 
 # End of https://www.toptal.com/developers/gitignore/api/c,c++,alteraquartusii,python,web
 
