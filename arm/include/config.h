@@ -20,7 +20,7 @@
 #define HPS_TO_FPGA_BASE    0xC0000000 /* Main bridge */
 
 /* FPGA Peripherals Offsets (adjust acoording to PLatform Designer) */
-#define FIFO_BASE_OFFSET    0x00001000 /* Audio FIFO offset */
+#define FIFO_BASE_OFFSET    0x10000000 /* Audio FIFO offset */
 #define FIFO_SIZE           8192       /* 8KB FIFO */
 
 
