@@ -9,6 +9,7 @@
 #ifndef AUDIO_CONTROLLER_H
 #define AUDIO_CONTROLLER_H
 
+#include "fifo_writer.h"
 #include <stdint.h>
 #include <pthread.h>
 
@@ -34,9 +35,9 @@ typedef struct {
  */ 
 typedef struct {
     /* Playlist */
-    playlist_entry_t playlist[64] /* Max 64 songs */
+    playlist_entry_t playlist[64]; /* Max 64 songs */
     int playlist_size; /* Actual size */
-    int current track;
+    int current_track;
 
     /* Threading */
     pthread_t playback_thread;
@@ -65,7 +66,7 @@ int audio_controller_init(audio_controller_t *ctrl, fifo_context_t *fifo);
  *
  * @param ctrl Pointer to audio_controler_t structure
  */
-int audio_controller_shutdown(audio_controller_t *ctrl);
+void audio_controller_shutdown(audio_controller_t *ctrl);
 
 /**
  * @brief Load playlist from directory
