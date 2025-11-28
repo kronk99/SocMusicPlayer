@@ -6,7 +6,7 @@
    version="1.0"
    description=""
    tags=""
-   categories="" />
+   categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
    element CLK
@@ -16,6 +16,11 @@
          value = "0";
          type = "int";
       }
+      datum sopceditor_expanded
+      {
+         value = "1";
+         type = "boolean";
+      }
    }
    element FIFO
    {
@@ -24,9 +29,19 @@
          value = "4";
          type = "int";
       }
+      datum sopceditor_expanded
+      {
+         value = "1";
+         type = "boolean";
+      }
    }
    element FIFO.in
    {
+      datum _tags
+      {
+         value = "";
+         type = "String";
+      }
       datum baseAddress
       {
          value = "12288";
@@ -43,6 +58,11 @@
    }
    element FIFO.out
    {
+      datum _tags
+      {
+         value = "";
+         type = "String";
+      }
       datum baseAddress
       {
          value = "12304";
@@ -56,9 +76,19 @@
          value = "2";
          type = "int";
       }
+      datum sopceditor_expanded
+      {
+         value = "1";
+         type = "boolean";
+      }
    }
    element NIOS.debug_mem_slave
    {
+      datum _tags
+      {
+         value = "";
+         type = "String";
+      }
       datum baseAddress
       {
          value = "8192";
@@ -72,6 +102,40 @@
          value = "1";
          type = "int";
       }
+      datum sopceditor_expanded
+      {
+         value = "1";
+         type = "boolean";
+      }
+   }
+   element REGBUTTONS
+   {
+      datum _sortIndex
+      {
+         value = "5";
+         type = "int";
+      }
+      datum sopceditor_expanded
+      {
+         value = "1";
+         type = "boolean";
+      }
+   }
+   element REGBUTTONS.irq
+   {
+      datum _tags
+      {
+         value = "";
+         type = "String";
+      }
+   }
+   element REGBUTTONS.s1
+   {
+      datum baseAddress
+      {
+         value = "12352";
+         type = "String";
+      }
    }
    element REGLEDS
    {
@@ -80,12 +144,54 @@
          value = "3";
          type = "int";
       }
+      datum sopceditor_expanded
+      {
+         value = "1";
+         type = "boolean";
+      }
    }
    element REGLEDS.s1
    {
       datum baseAddress
       {
          value = "10240";
+         type = "String";
+      }
+   }
+   element REGSWITCHES
+   {
+      datum _sortIndex
+      {
+         value = "6";
+         type = "int";
+      }
+      datum sopceditor_expanded
+      {
+         value = "1";
+         type = "boolean";
+      }
+   }
+   element REGSWITCHES.s1
+   {
+      datum baseAddress
+      {
+         value = "12368";
+         type = "String";
+      }
+   }
+   element UART
+   {
+      datum _sortIndex
+      {
+         value = "7";
+         type = "int";
+      }
+   }
+   element UART.avalon_jtag_slave
+   {
+      datum baseAddress
+      {
+         value = "12384";
          type = "String";
       }
    }
@@ -110,6 +216,11 @@
  <parameter name="timeStamp" value="0" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
+ <interface
+   name="buttons"
+   internal="REGBUTTONS.external_connection"
+   type="conduit"
+   dir="end" />
  <interface name="clk" internal="CLK.clk_in" type="clock" dir="end" />
  <interface
    name="leds"
@@ -117,6 +228,11 @@
    type="conduit"
    dir="end" />
  <interface name="reset" internal="CLK.clk_in_reset" type="reset" dir="end" />
+ <interface
+   name="switches"
+   internal="REGSWITCHES.external_connection"
+   type="conduit"
+   dir="end" />
  <module name="CLK" kind="clock_source" version="18.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
@@ -164,7 +280,7 @@
   <parameter name="dataAddrWidth" value="14" />
   <parameter name="dataMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="dataMasterHighPerformanceMapParam" value="" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='RAM.s1' start='0x0' end='0x2000' type='altera_avalon_onchip_memory2.s1' /><slave name='NIOS.debug_mem_slave' start='0x2000' end='0x2800' type='altera_nios2_gen2.debug_mem_slave' /><slave name='REGLEDS.s1' start='0x2800' end='0x2810' type='altera_avalon_pio.s1' /><slave name='FIFO.in' start='0x3000' end='0x3004' type='altera_avalon_fifo.in' /><slave name='FIFO.out' start='0x3010' end='0x3014' type='altera_avalon_fifo.out' /><slave name='FIFO.in_csr' start='0x3020' end='0x3040' type='altera_avalon_fifo.in_csr' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='RAM.s1' start='0x0' end='0x2000' type='altera_avalon_onchip_memory2.s1' /><slave name='NIOS.debug_mem_slave' start='0x2000' end='0x2800' type='altera_nios2_gen2.debug_mem_slave' /><slave name='REGLEDS.s1' start='0x2800' end='0x2810' type='altera_avalon_pio.s1' /><slave name='FIFO.in' start='0x3000' end='0x3004' type='altera_avalon_fifo.in' /><slave name='FIFO.in_csr' start='0x3020' end='0x3040' type='altera_avalon_fifo.in_csr' /><slave name='REGBUTTONS.s1' start='0x3040' end='0x3050' type='altera_avalon_pio.s1' /><slave name='REGSWITCHES.s1' start='0x3050' end='0x3060' type='altera_avalon_pio.s1' /><slave name='UART.avalon_jtag_slave' start='0x3060' end='0x3068' type='altera_avalon_jtag_uart.avalon_jtag_slave' /></address-map>]]></parameter>
   <parameter name="data_master_high_performance_paddr_base" value="0" />
   <parameter name="data_master_high_performance_paddr_size" value="0" />
   <parameter name="data_master_paddr_base" value="0" />
@@ -201,16 +317,16 @@
   <parameter name="icache_ramBlockType" value="Automatic" />
   <parameter name="icache_size" value="4096" />
   <parameter name="icache_tagramBlockType" value="Automatic" />
-  <parameter name="impl" value="Fast" />
+  <parameter name="impl" value="Tiny" />
   <parameter name="instAddrWidth" value="14" />
-  <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='RAM.s1' start='0x0' end='0x2000' type='altera_avalon_onchip_memory2.s1' /><slave name='NIOS.debug_mem_slave' start='0x2000' end='0x2800' type='altera_nios2_gen2.debug_mem_slave' /></address-map>]]></parameter>
+  <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='RAM.s1' start='0x0' end='0x2000' type='altera_avalon_onchip_memory2.s1' /><slave name='NIOS.debug_mem_slave' start='0x2000' end='0x2800' type='altera_nios2_gen2.debug_mem_slave' /><slave name='FIFO.out' start='0x3010' end='0x3014' type='altera_avalon_fifo.out' /></address-map>]]></parameter>
   <parameter name="instructionMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="instructionMasterHighPerformanceMapParam" value="" />
   <parameter name="instruction_master_high_performance_paddr_base" value="0" />
   <parameter name="instruction_master_high_performance_paddr_size" value="0" />
   <parameter name="instruction_master_paddr_base" value="0" />
   <parameter name="instruction_master_paddr_size" value="0" />
-  <parameter name="internalIrqMaskSystemInfo" value="1" />
+  <parameter name="internalIrqMaskSystemInfo" value="15" />
   <parameter name="io_regionbase" value="0" />
   <parameter name="io_regionsize" value="0" />
   <parameter name="master_addr_map" value="false" />
@@ -354,6 +470,20 @@
   <parameter name="useShallowMemBlocks" value="false" />
   <parameter name="writable" value="true" />
  </module>
+ <module name="REGBUTTONS" kind="altera_avalon_pio" version="18.1" enabled="1">
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="bitModifyingOutReg" value="false" />
+  <parameter name="captureEdge" value="true" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="direction" value="Input" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="generateIRQ" value="true" />
+  <parameter name="irqType" value="EDGE" />
+  <parameter name="resetValue" value="0" />
+  <parameter name="simDoTestBenchWiring" value="true" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="width" value="4" />
+ </module>
  <module name="REGLEDS" kind="altera_avalon_pio" version="18.1" enabled="1">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
@@ -368,6 +498,48 @@
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="32" />
  </module>
+ <module
+   name="REGSWITCHES"
+   kind="altera_avalon_pio"
+   version="18.1"
+   enabled="1">
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="bitModifyingOutReg" value="false" />
+  <parameter name="captureEdge" value="true" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="direction" value="Input" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="generateIRQ" value="true" />
+  <parameter name="irqType" value="EDGE" />
+  <parameter name="resetValue" value="0" />
+  <parameter name="simDoTestBenchWiring" value="true" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="width" value="4" />
+ </module>
+ <module name="UART" kind="altera_avalon_jtag_uart" version="18.1" enabled="1">
+  <parameter name="allowMultipleConnections" value="false" />
+  <parameter name="avalonSpec" value="2.0" />
+  <parameter name="clkFreq" value="50000000" />
+  <parameter name="hubInstanceID" value="0" />
+  <parameter name="readBufferDepth" value="64" />
+  <parameter name="readIRQThreshold" value="8" />
+  <parameter name="simInputCharacterStream" value="" />
+  <parameter name="simInteractiveOptions">NO_INTERACTIVE_WINDOWS</parameter>
+  <parameter name="useRegistersForReadBuffer" value="false" />
+  <parameter name="useRegistersForWriteBuffer" value="false" />
+  <parameter name="useRelativePathForSimFile" value="false" />
+  <parameter name="writeBufferDepth" value="64" />
+  <parameter name="writeIRQThreshold" value="8" />
+ </module>
+ <connection
+   kind="avalon"
+   version="18.1"
+   start="NIOS.data_master"
+   end="UART.avalon_jtag_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x3060" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
  <connection
    kind="avalon"
    version="18.1"
@@ -391,11 +563,6 @@
   <parameter name="baseAddress" value="0x3020" />
   <parameter name="defaultConnection" value="false" />
  </connection>
- <connection kind="avalon" version="18.1" start="NIOS.data_master" end="FIFO.out">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x3010" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
  <connection kind="avalon" version="18.1" start="NIOS.data_master" end="RAM.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
@@ -413,10 +580,37 @@
  <connection
    kind="avalon"
    version="18.1"
+   start="NIOS.data_master"
+   end="REGBUTTONS.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x3040" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="18.1"
+   start="NIOS.data_master"
+   end="REGSWITCHES.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x3050" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="18.1"
    start="NIOS.instruction_master"
    end="NIOS.debug_mem_slave">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x2000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="18.1"
+   start="NIOS.instruction_master"
+   end="FIFO.out">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x3010" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -430,13 +624,40 @@
  </connection>
  <connection kind="clock" version="18.1" start="CLK.clk" end="NIOS.clk" />
  <connection kind="clock" version="18.1" start="CLK.clk" end="REGLEDS.clk" />
+ <connection kind="clock" version="18.1" start="CLK.clk" end="REGBUTTONS.clk" />
+ <connection kind="clock" version="18.1" start="CLK.clk" end="REGSWITCHES.clk" />
+ <connection kind="clock" version="18.1" start="CLK.clk" end="UART.clk" />
  <connection kind="clock" version="18.1" start="CLK.clk" end="RAM.clk1" />
  <connection kind="clock" version="18.1" start="CLK.clk" end="FIFO.clk_in" />
  <connection kind="interrupt" version="18.1" start="NIOS.irq" end="FIFO.in_irq">
+  <parameter name="irqNumber" value="2" />
+ </connection>
+ <connection kind="interrupt" version="18.1" start="NIOS.irq" end="REGBUTTONS.irq">
   <parameter name="irqNumber" value="0" />
+ </connection>
+ <connection
+   kind="interrupt"
+   version="18.1"
+   start="NIOS.irq"
+   end="REGSWITCHES.irq">
+  <parameter name="irqNumber" value="1" />
+ </connection>
+ <connection kind="interrupt" version="18.1" start="NIOS.irq" end="UART.irq">
+  <parameter name="irqNumber" value="3" />
  </connection>
  <connection kind="reset" version="18.1" start="CLK.clk_reset" end="NIOS.reset" />
  <connection kind="reset" version="18.1" start="CLK.clk_reset" end="REGLEDS.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="CLK.clk_reset"
+   end="REGBUTTONS.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="CLK.clk_reset"
+   end="REGSWITCHES.reset" />
+ <connection kind="reset" version="18.1" start="CLK.clk_reset" end="UART.reset" />
  <connection kind="reset" version="18.1" start="CLK.clk_reset" end="RAM.reset1" />
  <connection kind="reset" version="18.1" start="CLK.clk_reset" end="FIFO.reset_in" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
