@@ -19,7 +19,16 @@
  * ==================== */
 
 /**
- * @brief PLaylist entry
+ * @brief Playback states
+ */
+typedef enum { // TODO: For now I am declaring these 3 states only. I think that's it but let's see
+    STATE_STOPPED,
+    STATE_PLAYING,
+    STATE_PAUSED
+} playback_state_t;
+
+/**
+ * @brief Playlist entry
  */
 typedef struct {
     char filename[256];
