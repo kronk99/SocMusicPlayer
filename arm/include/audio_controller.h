@@ -105,6 +105,9 @@ int audio_controller_load_playlist(audio_controller_t *ctrl, const char *directo
  */
 void audio_controller_get_time(audio_controller_t *ctrl, uint32_t *current_sec, uint32_t *total_sec);
 
+int audio_controller_play(audio_controller_t *ctrl);
+void audio_controller_stop(audio_controller_t *ctrl);
+void audio_controller_next(audio_controller_t *ctrl);
 
 #endif /* AUDIO_CONTROLLER_H */
 

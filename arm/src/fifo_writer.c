@@ -91,23 +91,42 @@ void fifo_close(fifo_context_t *fifo) {
     }
 }
 
-int fifo_write_sample(fifo_context_t *fifo, int16_t sample) {
-    if (!fifo || !fifo->regs) {
-        ERROR_PRINT("Invalid FIFO context");
+int fifo_write_samples(fifo_context_t *fifo, const int16_t *samples, uint32_t count) {
+    if (!fifo || !fifo->regs || !samples) {
+        ERROR_PRINT("Invalid parameters");
         return -1;
     }
 
-    /* Check if FIFO is full */
-    if (fifo->regs->status & FIFO_STATUS_FULL) {
-        DEBUG_PRINT("FIFO full, cannot write sample");
-        return -1;
-    }
+    uint32_t written = 0;
 
-    /* Write sample to FIFO data register */
-    /* Note: Depending on FIFO design, might need to convert 16-bit to 32-bit */
-    fifo->regs->data = (uint32_t)sample;
-    fifo->words_written++;
+    for (uint32_t i = 0; i < count; i++) {
+        /* Check available space in FIFO */
+        uint32_t free_space = fifo_get_free_space(fifo);
+        if (free_space == 0) {
+            DEBUG_PRINT("FIFO full after writing %u/%u samples", written, count);
+            break;
+        }
+
+        /* Write sample */
+        fifo->regs->data = (uint32_t)samples[i];
+        fifo->words_written++;
+        written++;
+    }
 
     return 0;
+}
+
+uint32_t fifo_get_free_space(fifo_context_t *fifo) {
+    if (!fifo || !fifo->regs) {
+        return 0;
+    }
+
+    uint32_t fill_level = fifo->regs->fill_level;
+    
+    if (fill_level >= fifo->fifo_size) {
+        return 0;
+    }
+
+    return fifo->fifo_size - fill_level;
 }
 

@@ -24,6 +24,10 @@
 #define FIFO_SIZE           8192       /* 8KB FIFO */
 
 
+/* Playlist configuration */
+#define MAX_PLAYLIST_SIZE   64
+#define MUSIC_DIRECTORY     "/home/root/sounds"
+
 
 /* Some macros */
 #define INFO_PRINT(fmt, ...) \

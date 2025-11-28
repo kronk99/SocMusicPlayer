@@ -70,6 +70,7 @@ void fifo_close(fifo_context_t *fifo);
  */
 int fifo_write_sample(fifo_context_t *fifo, int16_t sample);
 
+uint32_t fifo_get_free_space(fifo_context_t *fifo);
 
 
 

@@ -81,6 +81,16 @@ int wav_open(wav_file_t *wav, const char *filename);
 void wav_close(wav_file_t *wav);
 
 /**
+ * @brief Read audio samples from WAV file
+ *
+ * @param wav Pointer to wav_file_t structure
+ * @param buffer Buffer to store samples
+ * @param num_samples Number of samples to read
+ * @return Number of samples readed, 0 if EOF and -1 on error
+ */
+int wav_read_samples(wav_file_t *wav, int16_t *buffer, uint32_t num_samples);
+
+/**
  * @brief Print WAV file information (debug)
  *
  * @param wav Pointer to wav_file_t structure

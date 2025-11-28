@@ -11,7 +11,7 @@
 
 
 /* =======================
- * PUBLIC FUNCTIONS
+ * PRIVATE FUNCTIONS
  * ======================= */
 
 /**
@@ -100,6 +100,49 @@ void wav_close(wav_file_t *wav) {
         wav->file = NULL;
         DEBUG_PRINT("Closed WAV file: %s", wav->filename);
     }
+}
+
+
+int wav_read_samples(wav_file_t *wav, int16_t *buffer, uint32_t num_samples) {
+    if (!wav || !wav->file || !buffer) {
+        ERROR_PRINT("Invalid parameters");
+        return -1;
+    }
+
+    /* Check EOF */
+    if (wav->current_sample >= wav->total_samples) {
+        return 0;
+    }
+
+    /* If less samples available than num_samples */
+    uint32_t samples_to_read = num_samples;
+    if (wav->current_sample + samples_to_read > wav->total_samples) {
+        samples_to_read = wav->total_samples - wav->current_sample;
+    }
+
+    /* Read samples */
+    size_t bytes_to_read = samples_to_read * (wav->header.bits_per_sample / 8) * wav->header.num_channels;
+
+    size_t bytes_read = fread(buffer, 1, bytes_to_read, wav->file);
+
+    if (bytes_read != bytes_to_read) {
+        ERROR_PRINT("Read error: expected &zu bytes, got %zu", bytes_to_read, bytes_read);
+        return -1;
+    }
+
+
+    /* If its stereo, convert to mono */
+    if (wav->header.num_channels == 2) {
+        for (uint32_t i = 0; i < samples_to_read; i++) {
+            int32_t left = buffer[i * 2];
+            int32_t right = buffer[i * 2 + 1];
+            buffer[i] = (int16_t)((left + right) / 2);
+        }
+    }
+
+    wav->current_sample += samples_to_read;
+
+    return samples_to_read;
 }
 
 void wav_print_info(wav_file_t *wav) {

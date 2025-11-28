@@ -67,6 +67,16 @@ static int initialize_system(app_context_t *app) {
         return -1;
     }
 
+    /* 3. Load playlist */
+    INFO_PRINT("Loading playlist from %s...", MUSIC_DIRECTORY);
+    int num_songs = audio_controller_load_playlist(&app->audio, MUSIC_DIRECTORY);
+    if (num_songs <= 0) { // TODO: This is causing a bug and it SHOULD be resolved. It prints it anyway
+        ERROR_PRINT("No songs found in playlist");
+        /* Continue anyway, but warned user */
+    } else {
+        INFO_PRINT("Loaded %d songs", num_songs);
+    }
+
     /* TODO: Rest of them -> 3., 4., etc*/
     // TODO: Get rid of the following, its just for testing purposes
     //INFO_PRINT("Initializing wav reader...");
@@ -80,6 +90,12 @@ static int initialize_system(app_context_t *app) {
     INFO_PRINT("================================");
     INFO_PRINT("System initialized successfully!");
     INFO_PRINT("================================");
+
+    // TODO: Get rid of the following, its just for testing purposes
+    INFO_PRINT("Playing songs...");
+    audio_controller_play(&app->audio);
+
+    // Until here, it is just for testing purposes only
 
     return 0;
 }
@@ -119,6 +135,7 @@ int main(int argc, char *argv[]) {
         ERROR_PRINT("System initialization failed");
         return EXIT_FAILURE;
     }
+
 
     /* Cleanup */
     shutdown_system(&g_app);
