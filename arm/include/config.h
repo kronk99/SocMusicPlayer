@@ -23,6 +23,9 @@
 #define FIFO_BASE_OFFSET    0x10000000 /* Audio FIFO offset */
 #define FIFO_SIZE           8192       /* 8KB FIFO */
 
+/* Display Update Rate */
+#define DISPLAY_UPDATE_MS   100
+
 
 /* Playlist configuration */
 #define MAX_PLAYLIST_SIZE   64

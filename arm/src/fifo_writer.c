@@ -45,6 +45,10 @@ int fifo_init(fifo_context_t *fifo, uint32_t physical_base, uint32_t size) {
     /* Calculate mapping size (must be page-aligned) */
     uint32_t map_size = ((size + offset_in_page + PAGE_MASK) & ~PAGE_MASK);
 
+    if (map_size < PAGE_SIZE) {
+        map_size = PAGE_SIZE; /* Minimum one page */
+    }
+
     void *mapped_base = mmap(NULL, 
                              map_size, 
                              PROT_READ | PROT_WRITE,
@@ -55,78 +59,69 @@ int fifo_init(fifo_context_t *fifo, uint32_t physical_base, uint32_t size) {
     close(fd); // Can be closed after mmap
 
     if (mapped_base == MAP_FAILED) {
-        ERROR_PRINT("Failed to mmap FIFO register at 0x%08X", physical_base);
+        ERROR_PRINT("Failed to mmap FIFO at 0x%08X", physical_base);
+        perror("mmap");
         return -1;
     }
 
-    /* Calculate actual register base */
+    /* Calculate actual data register pointer */
     fifo->base_addr = mapped_base;
-    fifo->regs = (volatile fifo_regs_t *)((uint8_t *)mapped_base + offset_in_page);
-    fifo->fifo_size = size / sizeof(uint32_t); /* Size in words */
+    fifo->map_size = map_size;
+    fifo->data_reg = (volatile uint32_t *)((uint8_t *)mapped_base + offset_in_page);
+    fifo->fifo_depth = size / sizeof(uint32_t); /* Depth in words */
     fifo->words_written = 0;
-    fifo->overflow_count = 0;
 
     INFO_PRINT("FIFO initialized at physical address 0x%08X", physical_base);
     DEBUG_PRINT("  Mapped base: %p", mapped_base);
-    DEBUG_PRINT("  Register base: %p", fifo->regs);
-    DEBUG_PRINT("  FIFO size: %u words", fifo->fifo_size);
+    DEBUG_PRINT("  Data register: %p", fifo->data_reg);
+    DEBUG_PRINT("  FIFO depth: %u words", fifo->fifo_depth);
+    DEBUG_PRINT("  Map size: %u bytes", map_size);
 
-    /* Test read status to verify mapping works */
-    uint32_t status = fifo->regs->status;
-    DEBUG_PRINT("  Initial status: 0x%08X", status);
+    /* Test write (write a zero, harmless) */
+    *fifo->data_reg = 0;
+    DEBUG_PRINT("   Test write successful");
 
     return 0;
 }
 
 void fifo_close(fifo_context_t *fifo) {
     if (fifo && fifo->base_addr) {
-        /* "Reverse engineer" the original map size for munmap */
-        uint32_t map_size = ((fifo->fifo_size * sizeof(uint32_t) + PAGE_MASK) & ~PAGE_MASK);
-        munmap(fifo->base_addr, map_size);
+        munmap(fifo->base_addr, fifo->map_size);
 
-        INFO_PRINT("FIFO closed. Total words written: %u, Overflows: %u",
-                    fifo->words_written, fifo->overflow_count);
+        INFO_PRINT("FIFO closed. Total words written: %u", fifo->words_written);
 
         memset(fifo, 0, sizeof(fifo_context_t));
     }
 }
 
 int fifo_write_samples(fifo_context_t *fifo, const int16_t *samples, uint32_t count) {
-    if (!fifo || !fifo->regs || !samples) {
+    if (!fifo || !fifo->data_reg || !samples) {
         ERROR_PRINT("Invalid parameters");
         return -1;
     }
 
-    uint32_t written = 0;
-
     for (uint32_t i = 0; i < count; i++) {
-        /* Check available space in FIFO */
-        uint32_t free_space = fifo_get_free_space(fifo);
-        if (free_space == 0) {
-            DEBUG_PRINT("FIFO full after writing %u/%u samples", written, count);
-            break;
-        }
-
-        /* Write sample */
-        fifo->regs->data = (uint32_t)samples[i];
+        *fifo->data_reg = (uint32_t)(int32_t)samples[i];
         fifo->words_written++;
-        written++;
     }
 
-    return 0;
+    return count;
 }
 
-uint32_t fifo_get_free_space(fifo_context_t *fifo) {
-    if (!fifo || !fifo->regs) {
-        return 0;
+void fifo_print_stats(fifo_context_t *fifo) {
+    if (!fifo || !fifo->data_reg) {
+        return;
     }
 
-    uint32_t fill_level = fifo->regs->fill_level;
-    
-    if (fill_level >= fifo->fifo_size) {
-        return 0;
-    }
-
-    return fifo->fifo_size - fill_level;
+    printf("========================================\n");
+    printf("FIFO Statistics (ARM Side)\n");
+    printf("========================================\n");
+    printf("FIFO Depth:      %u words (configured)\n", fifo->fifo_depth);
+    printf("Data Register:   %p\n", fifo->data_reg);
+    printf("Total Written:   %u words\n", fifo->words_written);
+    printf("========================================\n");
+    printf("NOTE: Fill level and status not accessible from ARM.\n");
+    printf("      Check NIOS side (in_csr @ 0xFF210020) for status.\n");
+    printf("========================================\n");
 }
 

@@ -11,17 +11,6 @@
 
 #include <stdint.h>
 
-// TODO: Adjust according to design in Platform Designer. The following is just a place holder
-/**
- * @brief FIFO register offsets
- */
-typedef struct {
-    volatile uint32_t data;       /* Offset 0x00: Data register */
-    volatile uint32_t fill_level; /* Offset 0x04: Fill level (words used) */
-    volatile uint32_t status;     /* Offset 0x08: Status register */
-    volatile uint32_t control;    /* Offset 0x0C: Control register */
-} fifo_regs_t;
-
 
 /* Status register bits */
 #define FIFO_STATUS_FULL (1 << 0)
@@ -30,11 +19,11 @@ typedef struct {
  * @brief FIFO conext structure
  */
 typedef struct {
-    volatile fifo_regs_t *regs; /* Memory-mapped register */
-    void *base_addr;            /* Mapped base address */
-    uint32_t fifo_size;         /* FIFO size in words */
-    uint32_t words_written;     /* Total words written (stats) */
-    uint32_t overflow_count;    /* Overflow events counter */
+    volatile uint32_t *data_reg; /* Pointer to FIFO data register */
+    void *base_addr;             /* Mapped base address */
+    uint32_t map_size;           /* Size of mapped region */
+    uint32_t fifo_depth;         /* FIFO depth in words (from Platform Designer) */
+    uint32_t words_written;      /* Total words written (stats) */
 } fifo_context_t;
 
 
@@ -68,12 +57,7 @@ void fifo_close(fifo_context_t *fifo);
  * 
  * 
  */
-int fifo_write_sample(fifo_context_t *fifo, int16_t sample);
-
-uint32_t fifo_get_free_space(fifo_context_t *fifo);
-
-
-
+int fifo_write_samples(fifo_context_t *fifo, const int16_t *samples, uint32_t count);
 
 #endif /* FIFO_WRITER_H */
 
