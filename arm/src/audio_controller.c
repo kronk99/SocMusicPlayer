@@ -113,7 +113,23 @@ int audio_controller_init(audio_controller_t *ctrl, fifo_context_t *fifo) {
 }
 
 void audio_controller_shutdown(audio_controller_t *ctrl) {
+    if (!ctrl) return;
 
+    INFO_PRINT("Shutting down audio controller");
+
+    /* Stop playback thread */
+    ctrl->thread_running = 0;
+    pthread_join(ctrl->playback_thread, NULL);
+
+    /* Close current WAV file */
+    if (ctrl->current_wav.file) {
+        wav_close(&ctrl->current_wav);
+    }
+
+    /* Destroy mutex */
+    pthread_mutex_destroy(&ctrl->state_mutex);
+
+    INFO_PRINT("Audio controller shutdown complete");
 }
 
 void audio_controller_get_time(audio_controller_t *ctrl, uint32_t *current_sec, uint32_t *total_sec) {
@@ -198,6 +214,53 @@ void audio_controller_stop(audio_controller_t *ctrl) {
 }
 
 void audio_controller_next(audio_controller_t *ctrl) {
+    if (!ctrl) {
+        ERROR_PRINT("Invalid parameters");
+        return -1;
+    }
 
+    pthread_mutex_lock(&ctrl->state_mutex);
+    
+    if (ctrl->playlist_size == 0) {
+        pthread_mutex_unlock(&ctrl->state_mutex);
+        return -1;
+    }
+
+    /* Close current file */
+    if (ctrl->current_wav.file) {
+        wav_close(&ctrl->current_wav);
+    }
+
+    /* Move to next track */
+    ctrl->current_track++;
+    if (ctrl->current_track >= ctrl->playlist_size) {
+        // TODO: Change this when buttons are available. For now it will be only a print statement, but it should loop back to first track
+        // ctrl->current_track = 0; /* Loop back to start */
+        INFO_PRINT("Reached end of playlist. Thank you for listening with us!");
+    }
+
+    /* Start new track */
+    if (ctrl->state == STATE_PLAYING) {
+        pthread_mutex_unlock(&ctrl->state_mutex);
+        return audio_controller_play(ctrl);
+    }
+
+    pthread_mutex_unlock(&ctrl->state_mutex);
+    return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
