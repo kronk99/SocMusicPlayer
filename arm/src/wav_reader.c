@@ -88,7 +88,7 @@ int wav_open(wav_file_t *wav, const char *filename) {
     DEBUG_PRINT("  Total samples: %u", wav->total_samples);
     DEBUG_PRINT("  Duration: %u seconds", wav->duration_seconds);
 
-    wav_print_info(wav);
+    //wav_print_info(wav);
 
     return 0;
 }

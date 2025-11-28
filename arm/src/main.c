@@ -70,7 +70,7 @@ static int initialize_system(app_context_t *app) {
     /* 3. Load playlist */
     INFO_PRINT("Loading playlist from %s...", MUSIC_DIRECTORY);
     int num_songs = audio_controller_load_playlist(&app->audio, MUSIC_DIRECTORY);
-    if (num_songs <= 0) { // TODO: This is causing a bug and it SHOULD be resolved. It prints it anyway
+    if (num_songs <= 0) {
         ERROR_PRINT("No songs found in playlist");
         /* Continue anyway, but warned user */
     } else {

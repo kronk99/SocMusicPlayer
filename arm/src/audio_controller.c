@@ -163,7 +163,7 @@ int audio_controller_load_playlist(audio_controller_t *ctrl, const char *directo
    closedir(dir);
 
    INFO_PRINT("Loaded %d songs from %s", ctrl->playlist_size, directory);
-   return 0;
+   return ctrl->playlist_size;
 }
 
 int audio_controller_play(audio_controller_t *ctrl) {
