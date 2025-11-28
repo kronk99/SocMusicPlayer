@@ -31,7 +31,7 @@ static void* playback_thread_func(void *args) {
     while (ctrl->thread_running) {
         pthread_mutex_lock(&ctrl->state_mutex);
 
-        if (/*ctrl->state == STATE_PLAYING && */ctrl->current_wav.file != NULL) {
+        if (ctrl->state == STATE_PLAYING && ctrl->current_wav.file != NULL) {
             pthread_mutex_unlock(&ctrl->state_mutex);
             
             /* Read samples from WAV file */
@@ -132,10 +132,6 @@ void audio_controller_shutdown(audio_controller_t *ctrl) {
     INFO_PRINT("Audio controller shutdown complete");
 }
 
-void audio_controller_get_time(audio_controller_t *ctrl, uint32_t *current_sec, uint32_t *total_sec) {
-
-}
-
 int audio_controller_load_playlist(audio_controller_t *ctrl, const char *directory) {
     if (!ctrl || !directory) {
         ERROR_PRINT("Invalid parameters");
@@ -190,8 +186,16 @@ int audio_controller_play(audio_controller_t *ctrl) {
 
     pthread_mutex_lock(&ctrl->state_mutex);
 
+    if (ctrl->state == STATE_PAUSED) {
+        /* Resume from pause */
+        ctrl->state = STATE_PLAYING;
+        INFO_PRINT("Resumed playback");
+        pthread_mutex_unlock(&ctrl->state_mutex);
+        return 0;
+    }
+
     if (ctrl->playlist_size == 0) {
-        ERROR_PRINT("PLaylist is empty");
+        ERROR_PRINT("Playlist is empty");
         pthread_mutex_unlock(&ctrl->state_mutex);
         return -1;
     }
@@ -202,6 +206,8 @@ int audio_controller_play(audio_controller_t *ctrl) {
         pthread_mutex_unlock(&ctrl->state_mutex);
         return -1;
     }
+
+    ctrl->state = STATE_PLAYING;
 
     INFO_PRINT("Playing track: %d: %s", ctrl->current_track, ctrl->playlist[ctrl->current_track].title);
 
@@ -250,8 +256,43 @@ void audio_controller_next(audio_controller_t *ctrl) {
 }
 
 
+void audio_controller_get_time(audio_controller_t *ctrl, uint32_t *current_sec, uint32_t *total_sec) {
+    if (!ctrl) {
+        if (current_sec) *current_sec = 0;
+        if (total_sec) *total_sec = 0;
+        return;
+    }
+    
+    pthread_mutex_lock(&ctrl->state_mutex);
 
+    if (current_sec) {
+        *current_sec = wav_get_current_time(&ctrl->current_wav);
+    }
 
+    if (total_sec) {
+        *total_sec = ctrl->current_wav.duration_seconds;
+    }
+
+    pthread_mutex_unlock(&ctrl->state_mutex);
+}
+
+const playlist_entry_t* audio_controller_get_current_track(audio_controller_t *ctrl) {
+    if (!ctrl || ctrl->playlist_size == 0) {
+        return NULL;
+    }
+
+    return &ctrl->playlist[ctrl->current_track];
+}
+
+playback_state_t audio_controller_get_state(audio_controller_t *ctrl) {
+    if (!ctrl) return STATE_STOPPED;
+
+    pthread_mutex_lock(&ctrl->state_mutex);
+    playback_state_t state = ctrl->state;
+    pthread_mutex_unlock(&ctrl->state_mutex);
+
+    return state;
+}
 
 
 

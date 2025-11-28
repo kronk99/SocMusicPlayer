@@ -108,6 +108,7 @@ void audio_controller_get_time(audio_controller_t *ctrl, uint32_t *current_sec, 
 int audio_controller_play(audio_controller_t *ctrl);
 void audio_controller_stop(audio_controller_t *ctrl);
 void audio_controller_next(audio_controller_t *ctrl);
+const playlist_entry_t* audio_controller_get_current_track(audio_controller_t *ctrl);
 
 #endif /* AUDIO_CONTROLLER_H */
 

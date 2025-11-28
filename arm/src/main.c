@@ -32,6 +32,7 @@
 typedef struct {
     audio_controller_t audio;
     fifo_context_t fifo;
+    int running;
 } app_context_t; 
 
 static app_context_t g_app;
@@ -112,7 +113,38 @@ static void shutdown_system(app_context_t *app) {
 }
 
 
+/* =========================
+ * MAIN LOOP
+ * ========================= */
+static void run_main_loop(app_context_t *app) {
+    INFO_PRINT("Entering main loop...");
 
+    app->running = 1;
+
+    while (app->running) {
+        /* Update display with current playback time */
+        uint32_t current_sec, total_sec;
+        audio_controller_get_time(&app->audio, &current_sec, &total_sec);
+        // TODO: Add the 7 segment display and web interface functions here
+
+        /* Print status periodically (every 5 seconds) */
+        static uint32_t last_status_print = 0;
+        if (current_sec > last_status_print + 5) {
+            playback_state_t state = audio_controller_get_state(&app->audio);
+            const playlist_entry_t *track = audio_controller_get_current_track(&app->audio);
+            
+            if (state == STATE_PLAYING && track) {
+                INFO_PRINT("Playing: %s - %02u:%02u / %02u:%02u", track->title, current_sec / 60, current_sec % 60, total_sec / 60, total_sec % 60);
+            }
+
+            last_status_print = current_sec;
+        }
+
+        usleep(DISPLAY_UPDATE_MS * 1000);
+    }
+
+    INFO_PRINT("Exiting main loop");
+}
 
 
 
@@ -136,6 +168,8 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
+    /* Run main loop */
+    run_main_loop(&g_app);
 
     /* Cleanup */
     shutdown_system(&g_app);

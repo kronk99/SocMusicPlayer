@@ -145,6 +145,13 @@ int wav_read_samples(wav_file_t *wav, int16_t *buffer, uint32_t num_samples) {
     return samples_to_read;
 }
 
+uint32_t wav_get_current_time(wav_file_t *wav) {
+    if (!wav || wav->header.sample_rate == 0) {
+        return 0;
+    }
+    return wav->current_sample / wav->header.sample_rate;
+}
+
 void wav_print_info(wav_file_t *wav) {
     if (!wav) {
         return;
