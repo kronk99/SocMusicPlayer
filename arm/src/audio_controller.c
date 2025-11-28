@@ -4,7 +4,8 @@
  */
 
 #include "audio_controller.h"
-
+#include "config.h"
+#include <string.h>
 
 /* ==============================
  * PRIVATE DEFINITIONS
@@ -13,10 +14,10 @@
 #define PLAYBACK_BUFFER_SAMPLES 1024
 
 /*
- * @brief
+ * @brief Playback thread function
  */
 static void* playback_thread_func(void *args) {
-    audio_controller_t *ctrl = (audio_controller_t *)arg;
+    audio_controller_t *ctrl = (audio_controller_t *)args;
     int16_t buffer[PLAYBACK_BUFFER_SAMPLES];
 
     INFO_PRINT("Playback thread started");

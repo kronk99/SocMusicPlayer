@@ -9,9 +9,11 @@
 #ifndef AUDIO_CONTROLLER_H
 #define AUDIO_CONTROLLER_H
 
-#include "fifo_writer.h"
 #include <stdint.h>
 #include <pthread.h>
+
+#include "fifo_writer.h"
+#include "wav_reader.h"
 
 
 /* ====================
@@ -48,8 +50,14 @@ typedef struct {
     int playlist_size; /* Actual size */
     int current_track;
 
+    /* Playback state */
+    playback_state_t state;
+    wav_file_t current_wav;
+    fifo_context_t *fifo;
+
     /* Threading */
     pthread_t playback_thread;
+    pthread_mutex_t state_mutex;
     int thread_running;
 } audio_controller_t;
 

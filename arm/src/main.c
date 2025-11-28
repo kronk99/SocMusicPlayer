@@ -19,9 +19,10 @@
 
 #include "config.h"
 #include "fifo_writer.h"
+#include "wav_reader.h"
+#include "audio_controller.h"
 // TODO: Rest of the includes
 // TODO: Get rid of the following include, its just for testing purposes
-#include "wav_reader.h"
 
 
 /* =======================
@@ -29,6 +30,7 @@
  * ======================= */
 
 typedef struct {
+    audio_controller_t audio;
     fifo_context_t fifo;
 } app_context_t; 
 
@@ -57,7 +59,15 @@ static int initialize_system(app_context_t *app) {
         return -1;
     }
 
-    /* TODO: Rest of them -> 2., 3., 4., etc*/
+    /* 2. Initialize audio controller */
+    INFO_PRINT("Initializing audio_controller...");
+    if (audio_controller_init(&app->audio, &app->fifo) != 0) {
+        ERROR_PRINT("Failed to initialize audio controller");
+        fifo_close(&app->fifo);
+        return -1;
+    }
+
+    /* TODO: Rest of them -> 3., 4., etc*/
     // TODO: Get rid of the following, its just for testing purposes
     //INFO_PRINT("Initializing wav reader...");
 
@@ -78,8 +88,8 @@ static void shutdown_system(app_context_t *app) {
     INFO_PRINT("Shutting down system...");
 
     //TODO: Shutdown everything else
+    audio_controller_shutdown(&app->audio);
     fifo_close(&app->fifo);
-   
 
 
     INFO_PRINT("Shutting complete");
