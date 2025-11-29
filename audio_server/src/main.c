@@ -1,6 +1,8 @@
 // servidor http minimo para exponer metadatos de audio  
 // usa sockets y responde solo a la ruta get /api/track  
 
+#include "wav_reader.h"
+
 #include <stdio.h>      
 #include <stdlib.h>       
 #include <string.h>     
@@ -31,19 +33,38 @@ typedef struct {
     uint16_t bits_per_sample;  // bits por muestra  
 } track_info_t;
 
-// datos quemados para pruebas mientras no se integre el wav_reader  
-// esto permite validar toda la ruta de comunicacion con el cliente web  
-static track_info_t g_track = {
-    .filename        = "music/example_song.wav",
-    .title           = "Cancion Ejemplito",
-    .artist          = "Artista desconocido",
-    .album           = "Demo Album",
-    .duration_seconds = 245,   // ejemplo  
-    .current_seconds  = 73,    // ejemplo  
-    .sample_rate      = 48000,
-    .num_channels     = 2,
-    .bits_per_sample  = 16
-};
+// datos de la pista actual  
+static track_info_t g_track;
+
+// funcion auxiliar para cargar datos desde un wav usando wav_reader  
+static int load_track_from_wav(const char *path, track_info_t *t) {
+    wav_file_t wav;
+
+    // abrir y parsear el wav  
+    if (wav_open(&wav, path) != 0) {
+        fprintf(stderr, "no se pudo abrir wav: %s\n", path);
+        return -1;
+    }
+
+    // limpiar estructura destino  
+    memset(t, 0, sizeof(*t));
+
+    // copiar campos basicos desde el wav  
+    snprintf(t->filename, sizeof(t->filename), "%s", wav.filename);
+    snprintf(t->title,   sizeof(t->title),   "%s", wav.title);
+    snprintf(t->artist,  sizeof(t->artist),  "%s", wav.artist);
+    snprintf(t->album,   sizeof(t->album),   "%s", wav.album);
+
+    t->duration_seconds = wav.duration_seconds;
+    t->current_seconds  = 0; // al inicio siempre 0  
+    t->sample_rate      = wav.header.sample_rate;
+    t->num_channels     = wav.header.num_channels;
+    t->bits_per_sample  = wav.header.bits_per_sample;
+
+    // cerrar wav  
+    wav_close(&wav);
+    return 0;
+}
 
 // garantiza el envio completo de un buffer  
 // send podria enviar menos bytes, asi que se repite hasta completar  
@@ -193,6 +214,27 @@ int main(void) {
     struct sockaddr_in addr;
     int opt = 1;
 
+    // cargar pista desde wav en la fpga  
+    if (load_track_from_wav("/home/root/music/example.wav", &g_track) != 0) {
+        fprintf(stderr, "no se pudo cargar el wav, usando datos quemados\n");
+
+        // fallback sencillo por si falla  
+        memset(&g_track, 0, sizeof(g_track));
+        snprintf(g_track.filename, sizeof(g_track.filename),
+                 "music/example_song.wav");
+        snprintf(g_track.title, sizeof(g_track.title),
+                 "Cancion Ejemplito");
+        snprintf(g_track.artist, sizeof(g_track.artist),
+                 "Artista desconocido");
+        snprintf(g_track.album, sizeof(g_track.album),
+                 "Demo Album");
+        g_track.duration_seconds = 245;
+        g_track.current_seconds  = 73;
+        g_track.sample_rate      = 48000;
+        g_track.num_channels     = 2;
+        g_track.bits_per_sample  = 16;
+    }
+
     // crear socket tcp  
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd < 0) {
@@ -207,7 +249,7 @@ int main(void) {
         return 1;
     }
 
-    // configurar direccion de escucha  aaaaaaaaaa
+    // configurar direccion de escucha  
     memset(&addr, 0, sizeof(addr));
     addr.sin_family      = AF_INET;
     addr.sin_addr.s_addr = htonl(INADDR_ANY); // acepta desde cualquier ip  

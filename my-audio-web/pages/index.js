@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:8080/api/track";
-
+const API_URL = "http://192.168.18.120:8080/api/track";
 function formatTime(totalSeconds) {
   if (!Number.isFinite(totalSeconds)) return "--:--";
   const sec = Math.max(0, Math.floor(totalSeconds));
