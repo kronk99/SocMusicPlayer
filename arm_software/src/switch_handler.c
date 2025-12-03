@@ -24,18 +24,9 @@
  */
 static const char* preset_names[] = {
     "None (Bypass)",
-    "Lowpass 10 kHz",
-    "Lowpass 5 kHz",
-    "Lowpass 2 kHz",
-    "Highpass 100 Hz",
-    "Highpass 500 Hz",
-    "Highpass 1 kHz",
-    "Bandpass 300Hz-3kHz (Phone)",
-    "Bandpass 1kHz-5kHz (Mid)",
-    "Bandpass 80Hz-250Hz (Sub-Bass)",
-    "Lowpass 1 kHz",
-    "Highpass 2 kHz",
-    "Bandpass 200Hz-800Hz (AM Radio)"
+    "MUTE (Silence)",
+    "Volume HIGH (x3)",
+    "Distortion (Extreme)"
 };
 
 /* ============================================================================
@@ -82,7 +73,7 @@ int switch_handler_init(switch_handler_t *handler, uint32_t switches_physical_ad
     INFO_PRINT("Switch handler initialized");
     INFO_PRINT("  Address: 0x%08X", switches_physical_addr);
     INFO_PRINT("  Initial value: 0x%03X", handler->last_value);
-    INFO_PRINT("  Initial preset: %s", preset_names[handler->current_preset]);
+    INFO_PRINT("  Initial preset: %s", switch_handler_get_preset_name(handler->current_preset));
 
     return 0;
 }
@@ -116,8 +107,8 @@ int switch_handler_check_filter_change(switch_handler_t *handler) {
         /* Filter changed */
         INFO_PRINT("Switch changed: 0x%03X -> 0x%03X", handler->last_value, current_value);
         INFO_PRINT("Filter preset: %s -> %s",
-                   preset_names[handler->current_preset],
-                   preset_names[current_preset]);
+                   switch_handler_get_preset_name(handler->current_preset),
+                   switch_handler_get_preset_name(current_preset));
 
         handler->last_value = current_value;
         handler->current_preset = current_preset;
@@ -131,8 +122,6 @@ int switch_handler_check_filter_change(switch_handler_t *handler) {
 filter_config_t switch_handler_get_filter_config(filter_preset_t preset, float fs) {
     filter_config_t config = {0};
     config.sample_rate = fs;
-    config.implementation = FILTER_IIR_BUTTERWORTH;
-    config.order = 4;
 
     switch (preset) {
         case FILTER_PRESET_NONE:
@@ -140,74 +129,22 @@ filter_config_t switch_handler_get_filter_config(filter_preset_t preset, float f
             break;
 
         case FILTER_PRESET_LP_10K:
-            config.type = FILTER_LOWPASS;
-            config.fc = 10000.0f;
+            /* SW=1: MUTE */
+            config.type = FILTER_MUTE;
             break;
 
         case FILTER_PRESET_LP_5K:
-            config.type = FILTER_LOWPASS;
-            config.fc = 5000.0f;
+            /* SW=2: Volume High */
+            config.type = FILTER_VOLUME_HIGH;
             break;
 
         case FILTER_PRESET_LP_2K:
-            config.type = FILTER_LOWPASS;
-            config.fc = 2000.0f;
-            break;
-
-        case FILTER_PRESET_HP_100:
-            config.type = FILTER_HIGHPASS;
-            config.fc = 100.0f;
-            break;
-
-        case FILTER_PRESET_HP_500:
-            config.type = FILTER_HIGHPASS;
-            config.fc = 500.0f;
-            break;
-
-        case FILTER_PRESET_HP_1K:
-            config.type = FILTER_HIGHPASS;
-            config.fc = 1000.0f;
-            break;
-
-        case FILTER_PRESET_BP_PHONE:
-            config.type = FILTER_BANDPASS;
-            config.fc1 = 300.0f;
-            config.fc2 = 3000.0f;
-            config.order = 2;  /* Bandpass limited to order 2 */
-            break;
-
-        case FILTER_PRESET_BP_MID:
-            config.type = FILTER_BANDPASS;
-            config.fc1 = 1000.0f;
-            config.fc2 = 5000.0f;
-            config.order = 2;
-            break;
-
-        case FILTER_PRESET_BP_BASS:
-            config.type = FILTER_BANDPASS;
-            config.fc1 = 80.0f;
-            config.fc2 = 250.0f;
-            config.order = 2;
-            break;
-
-        case FILTER_PRESET_LP_1K:
-            config.type = FILTER_LOWPASS;
-            config.fc = 1000.0f;
-            break;
-
-        case FILTER_PRESET_HP_2K:
-            config.type = FILTER_HIGHPASS;
-            config.fc = 2000.0f;
-            break;
-
-        case FILTER_PRESET_BP_AM:
-            config.type = FILTER_BANDPASS;
-            config.fc1 = 200.0f;
-            config.fc2 = 800.0f;
-            config.order = 2;
+            /* SW=3: Distortion Extreme */
+            config.type = FILTER_DISTORTION;
             break;
 
         default:
+            /* Cualquier otro switch = bypass */
             config.type = FILTER_NONE;
             break;
     }
@@ -216,8 +153,8 @@ filter_config_t switch_handler_get_filter_config(filter_preset_t preset, float f
 }
 
 const char* switch_handler_get_preset_name(filter_preset_t preset) {
-    if (preset < 0 || preset >= FILTER_PRESET_MAX) {
-        return "Unknown";
+    if (preset < 0 || preset > 3) {
+        return "Bypass";  /* Cualquier switch > 3 = bypass */
     }
     return preset_names[preset];
 }
@@ -250,6 +187,6 @@ void switch_handler_print_status(switch_handler_t *handler) {
     printf("\n");
 
     printf("Filter Select:   SW[3:0] = %d\n", handler->current_preset);
-    printf("Current Filter:  %s\n", preset_names[handler->current_preset]);
+    printf("Current Filter:  %s\n", switch_handler_get_preset_name(handler->current_preset));
     printf("========================================\n");
 }

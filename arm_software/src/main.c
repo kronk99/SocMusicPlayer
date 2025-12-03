@@ -221,16 +221,11 @@ static void run_main_loop(app_context_t *app) {
         int filter_preset = switch_handler_check_filter_change(&app->switches);
         if (filter_preset >= 0) {
             /* Switch changed, update filter */
-            if (filter_preset == FILTER_PRESET_NONE) {
-                INFO_PRINT("Filter disabled via switch");
-                audio_controller_enable_filter(&app->audio, 0);
-            } else {
-                filter_config_t config = switch_handler_get_filter_config(
-                    (filter_preset_t)filter_preset, AUDIO_SAMPLE_RATE);
-                INFO_PRINT("Applying filter: %s",
-                           switch_handler_get_preset_name((filter_preset_t)filter_preset));
-                audio_controller_set_filter(&app->audio, &config);
-            }
+            filter_config_t config = switch_handler_get_filter_config(
+                (filter_preset_t)filter_preset, AUDIO_SAMPLE_RATE);
+            INFO_PRINT("Applying filter: %s",
+                       switch_handler_get_preset_name((filter_preset_t)filter_preset));
+            audio_controller_set_filter(&app->audio, &config);
         }
 
         /* Update display with current playback time */
